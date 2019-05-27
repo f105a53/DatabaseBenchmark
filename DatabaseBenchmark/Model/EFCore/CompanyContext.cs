@@ -1,8 +1,6 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace DatabaseBenchmark.Model
+namespace DatabaseBenchmark.Model.EFCore
 {
     public partial class CompanyContext : DbContext
     {
@@ -18,15 +16,14 @@ namespace DatabaseBenchmark.Model
         public virtual DbSet<Department> Department { get; set; }
         public virtual DbSet<Dependent> Dependent { get; set; }
         public virtual DbSet<DeptLocations> DeptLocations { get; set; }
-        public virtual DbSet<Employee> Employee { get; set; }
-        public virtual DbSet<Project> Project { get; set; }
-        public virtual DbSet<WorksOn> WorksOn { get; set; }
+        public virtual DbSet<Linq2Db.Employee> Employee { get; set; }
+        public virtual DbSet<Linq2Db.Project> Project { get; set; }
+        public virtual DbSet<Linq2Db.WorksOn> WorksOn { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=localhost;Database=Company;Trusted_Connection=True;");
             }
         }
@@ -110,7 +107,7 @@ namespace DatabaseBenchmark.Model
                     .HasConstraintName("FK_Dept_Locations_Department");
             });
 
-            modelBuilder.Entity<Employee>(entity =>
+            modelBuilder.Entity<Linq2Db.Employee>(entity =>
             {
                 entity.HasKey(e => e.Ssn);
 
@@ -163,7 +160,7 @@ namespace DatabaseBenchmark.Model
                     .HasConstraintName("FK_Employee_Employee");
             });
 
-            modelBuilder.Entity<Project>(entity =>
+            modelBuilder.Entity<Linq2Db.Project>(entity =>
             {
                 entity.HasKey(e => e.Pnumber);
 
@@ -189,7 +186,7 @@ namespace DatabaseBenchmark.Model
                     .HasConstraintName("FK_Project_Department");
             });
 
-            modelBuilder.Entity<WorksOn>(entity =>
+            modelBuilder.Entity<Linq2Db.WorksOn>(entity =>
             {
                 entity.HasKey(e => new { e.Essn, e.Pno });
 

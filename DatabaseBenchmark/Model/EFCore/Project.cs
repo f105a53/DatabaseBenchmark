@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace DatabaseBenchmark.Model
+namespace DatabaseBenchmark.Model.EFCore
 {
     public partial class Project
     {
         public Project()
         {
-            WorksOn = new HashSet<WorksOn>();
+            WorksOn = new HashSet<Linq2Db.WorksOn>();
         }
 
         public string Pname { get; set; }
@@ -16,6 +15,6 @@ namespace DatabaseBenchmark.Model
         public int? Dnum { get; set; }
 
         public virtual Department DnumNavigation { get; set; }
-        public virtual ICollection<WorksOn> WorksOn { get; set; }
+        public virtual ICollection<Linq2Db.WorksOn> WorksOn { get; set; }
     }
 }

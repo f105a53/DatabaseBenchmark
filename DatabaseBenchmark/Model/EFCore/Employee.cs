@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DatabaseBenchmark.Model
+namespace DatabaseBenchmark.Model.EFCore
 {
     public partial class Employee
     {
@@ -9,8 +9,8 @@ namespace DatabaseBenchmark.Model
         {
             Department = new HashSet<Department>();
             Dependent = new HashSet<Dependent>();
-            InverseSuperSsnNavigation = new HashSet<Employee>();
-            WorksOn = new HashSet<WorksOn>();
+            InverseSuperSsnNavigation = new HashSet<Linq2Db.Employee>();
+            WorksOn = new HashSet<Linq2Db.WorksOn>();
         }
 
         public string Fname { get; set; }
@@ -25,10 +25,10 @@ namespace DatabaseBenchmark.Model
         public int? Dno { get; set; }
 
         public virtual Department DnoNavigation { get; set; }
-        public virtual Employee SuperSsnNavigation { get; set; }
+        public virtual Linq2Db.Employee SuperSsnNavigation { get; set; }
         public virtual ICollection<Department> Department { get; set; }
         public virtual ICollection<Dependent> Dependent { get; set; }
-        public virtual ICollection<Employee> InverseSuperSsnNavigation { get; set; }
-        public virtual ICollection<WorksOn> WorksOn { get; set; }
+        public virtual ICollection<Linq2Db.Employee> InverseSuperSsnNavigation { get; set; }
+        public virtual ICollection<Linq2Db.WorksOn> WorksOn { get; set; }
     }
 }

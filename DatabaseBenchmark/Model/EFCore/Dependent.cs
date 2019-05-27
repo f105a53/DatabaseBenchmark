@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace DatabaseBenchmark.Model
+namespace DatabaseBenchmark.Model.EFCore
 {
     public partial class Dependent
     {
@@ -11,6 +10,6 @@ namespace DatabaseBenchmark.Model
         public DateTime? Bdate { get; set; }
         public string Relationship { get; set; }
 
-        public virtual Employee EssnNavigation { get; set; }
+        public virtual Linq2Db.Employee EssnNavigation { get; set; }
     }
 }
