@@ -1,26 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using DatabaseBenchmark.Model.EFCore;
 using DatabaseBenchmark.Model.Linq2Db;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SqlServer;
-using LinqToDB.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using Employee = DatabaseBenchmark.Model.EFCore.Employee;
 
 namespace DatabaseBenchmark
 {
     [CoreJob]
     [MarkdownExporter]
-    [HtmlExporter]
     [RPlotExporter]
-    [RankColumn]
     [MemoryDiagnoser]
-    [ReturnValueValidator]
+    [ReturnValueValidator(false)]
     public class SelectJoinBenchmark
     {
+        public enum Workload
+        {
+            SelectEmployees,
+            SelectEmployeeCount
+        }
+
         private readonly CompanyContext EfCoreContext = new CompanyContext();
 
         private readonly CompanyDB Linq2DbContext;
@@ -32,16 +32,26 @@ namespace DatabaseBenchmark
             Linq2DbContext = new CompanyDB("Default");
         }
 
+        [ParamsAllValues] public Workload SelectedWorkload { get; set; }
+
         [Benchmark]
-        public async Task<int> EFCore()
+        public ICollection<int> EFCore()
         {
-            return await EfCoreContext.Employee.SumAsyncEF(employee => employee.WorksOn.Count);
+            return SelectedWorkload switch
+                {
+                Workload.SelectEmployees => EfCoreContext.Employee.ToListSignleItem().Count.ToListSignleItem(),
+                Workload.SelectEmployeeCount => EfCoreContext.Employee.Count().ToListSignleItem()
+                };
         }
 
         [Benchmark]
-        public async Task<int> Linq2Db()
+        public ICollection<int> Linq2Db()
         {
-            return await Linq2DbContext.Employees.SumAsync(employee => employee.Worksons.Count());
+            return SelectedWorkload switch
+                {
+                Workload.SelectEmployees => Linq2DbContext.Employees.ToList().Count.ToListSignleItem(),
+                Workload.SelectEmployeeCount => Linq2DbContext.Employees.Count().ToListSignleItem()
+                };
         }
     }
 }
