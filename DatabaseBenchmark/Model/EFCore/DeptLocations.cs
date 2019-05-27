@@ -1,4 +1,7 @@
-﻿namespace DatabaseBenchmark.Model.EFCore
+﻿using System;
+using System.Collections.Generic;
+
+namespace DatabaseBenchmark.Model.EFCore
 {
     public partial class DeptLocations
     {

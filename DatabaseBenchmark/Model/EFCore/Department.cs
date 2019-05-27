@@ -8,8 +8,8 @@ namespace DatabaseBenchmark.Model.EFCore
         public Department()
         {
             DeptLocations = new HashSet<DeptLocations>();
-            Employee = new HashSet<Linq2Db.Employee>();
-            Project = new HashSet<Linq2Db.Project>();
+            Employee = new HashSet<Employee>();
+            Project = new HashSet<Project>();
         }
 
         public string Dname { get; set; }
@@ -17,9 +17,9 @@ namespace DatabaseBenchmark.Model.EFCore
         public decimal? MgrSsn { get; set; }
         public DateTime? MgrStartDate { get; set; }
 
-        public virtual Linq2Db.Employee MgrSsnNavigation { get; set; }
+        public virtual Employee MgrSsnNavigation { get; set; }
         public virtual ICollection<DeptLocations> DeptLocations { get; set; }
-        public virtual ICollection<Linq2Db.Employee> Employee { get; set; }
-        public virtual ICollection<Linq2Db.Project> Project { get; set; }
+        public virtual ICollection<Employee> Employee { get; set; }
+        public virtual ICollection<Project> Project { get; set; }
     }
 }

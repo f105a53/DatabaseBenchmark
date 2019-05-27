@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DatabaseBenchmark.Model.EFCore
 {
@@ -16,9 +18,9 @@ namespace DatabaseBenchmark.Model.EFCore
         public virtual DbSet<Department> Department { get; set; }
         public virtual DbSet<Dependent> Dependent { get; set; }
         public virtual DbSet<DeptLocations> DeptLocations { get; set; }
-        public virtual DbSet<Linq2Db.Employee> Employee { get; set; }
-        public virtual DbSet<Linq2Db.Project> Project { get; set; }
-        public virtual DbSet<Linq2Db.WorksOn> WorksOn { get; set; }
+        public virtual DbSet<Employee> Employee { get; set; }
+        public virtual DbSet<Project> Project { get; set; }
+        public virtual DbSet<WorksOn> WorksOn { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -107,7 +109,7 @@ namespace DatabaseBenchmark.Model.EFCore
                     .HasConstraintName("FK_Dept_Locations_Department");
             });
 
-            modelBuilder.Entity<Linq2Db.Employee>(entity =>
+            modelBuilder.Entity<Employee>(entity =>
             {
                 entity.HasKey(e => e.Ssn);
 
@@ -160,7 +162,7 @@ namespace DatabaseBenchmark.Model.EFCore
                     .HasConstraintName("FK_Employee_Employee");
             });
 
-            modelBuilder.Entity<Linq2Db.Project>(entity =>
+            modelBuilder.Entity<Project>(entity =>
             {
                 entity.HasKey(e => e.Pnumber);
 
@@ -186,7 +188,7 @@ namespace DatabaseBenchmark.Model.EFCore
                     .HasConstraintName("FK_Project_Department");
             });
 
-            modelBuilder.Entity<Linq2Db.WorksOn>(entity =>
+            modelBuilder.Entity<WorksOn>(entity =>
             {
                 entity.HasKey(e => new { e.Essn, e.Pno });
 

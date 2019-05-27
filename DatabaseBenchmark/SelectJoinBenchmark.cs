@@ -3,12 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
-using DatabaseBenchmark.Model;
-using DatabaseBenchmark.Model.EFCore;
-using DatabaseBenchmark.Model.Linq2Db;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Employee = DatabaseBenchmark.Model.Linq2Db.Employee;
 
 namespace DatabaseBenchmark
 {
@@ -20,19 +14,20 @@ namespace DatabaseBenchmark
             
         }
 
-        private readonly CompanyContext EfCoreContext = new CompanyContext();
-        private readonly CompanyDb Linq2DbContext = new Model.Linq2Db.CompanyDb();
+        //private readonly CompanyContext EfCoreContext = new CompanyContext();
+       // private readonly CompanyDB Linq2DbContext = new CompanyDB("Server=localhost;Database=Company;Trusted_Connection=True;");
 
-        [Benchmark]
-        public async Task<List<Employee>> EFCore()
-        {
-            return await EfCoreContext.Employee.Include(e=>e.WorksOn).ThenInclude(w=>w.PnoNavigation).ToListAsync();
-        }
-
-        public async Task<List<Employee>> Linq2Db()
-        {
-            return null;
-        }
+        //[Benchmark]
+        //public async Task<List<Employee>> EFCore()
+        //{
+        //    return return await EfCoreContext.Employee.Include(e=>e).ThenInclude(w=>w.PnoNavigation).ToListAsync();
+        //}
+        //[Benchmark]
+        //public async Task<List<Employee>> Linq2Db()
+        //{
+        //    return
+        //        null await Linq2DbContext.Employees.Include(e => e.Worksons).ThenInclude(w => w.WorksonProject).ToListAsync();
+        //}
 
     }
 
