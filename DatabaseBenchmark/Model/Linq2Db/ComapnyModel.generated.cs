@@ -98,7 +98,7 @@ namespace DatabaseBenchmark.Model.Linq2Db
 		/// <summary>
 		/// FK_Dependent_Employee
 		/// </summary>
-		[Association(ThisKey="Essn", OtherKey="SSN", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_Dependent_Employee", BackReferenceName="Dependents")]
+		[Association(ThisKey="Essn", OtherKey="SSN", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Dependent_Employee", BackReferenceName="Dependents")]
 		public Employee Employee { get; set; }
 
 		#endregion

@@ -30,7 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Model\EFCore\" />
+    <Compile Update="Model\Linq2Db\ComapnyModel.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ComapnyModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>
