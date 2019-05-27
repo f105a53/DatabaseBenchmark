@@ -46,7 +46,7 @@
 			"$(ProjectDir)LinqToDB.Templates\LinqToDB.SqlServer.SqlTypes.Tools.ttinclude"
 	*/
 
-	NamespaceName = "DataModels";
+	NamespaceName = "DatabaseBenchmark.Model.Linq2Db";
 
 //	LoadSqlServerMetadata("MyServer", "MyDatabase", "User", "Password");
 	LoadSqlServerMetadata(".", "Company"); // Integrated Security

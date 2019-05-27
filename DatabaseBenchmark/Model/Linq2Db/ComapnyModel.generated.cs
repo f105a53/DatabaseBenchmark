@@ -14,7 +14,7 @@ using System.Linq;
 using LinqToDB;
 using LinqToDB.Mapping;
 
-namespace DataModels
+namespace DatabaseBenchmark.Model.Linq2Db
 {
 	/// <summary>
 	/// Database       : Company
