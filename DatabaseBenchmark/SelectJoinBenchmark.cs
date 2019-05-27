@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using DatabaseBenchmark.Model.EFCore;
 using DatabaseBenchmark.Model.Linq2Db;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SqlServer;
+using LinqToDB.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Employee = DatabaseBenchmark.Model.EFCore.Employee;
 
@@ -16,6 +18,7 @@ namespace DatabaseBenchmark
     [RPlotExporter]
     [RankColumn]
     [MemoryDiagnoser]
+    [ReturnValueValidator]
     public class SelectJoinBenchmark
     {
         private readonly CompanyContext EfCoreContext = new CompanyContext();
@@ -30,15 +33,15 @@ namespace DatabaseBenchmark
         }
 
         [Benchmark]
-        public async Task<List<Employee>> EFCore()
+        public async Task<int> EFCore()
         {
-            return await EfCoreContext.Employee.Include(e => e.WorksOn).ThenInclude(w => w.PnoNavigation).ToListAsync();
+            return await EfCoreContext.Employee.SumAsyncEF(employee => employee.WorksOn.Count);
         }
 
         [Benchmark]
-        public async Task<List<Model.Linq2Db.Employee>> Linq2Db()
+        public async Task<int> Linq2Db()
         {
-            return await Linq2DbContext.Employees.ToListAsync();
+            return await Linq2DbContext.Employees.SumAsync(employee => employee.Worksons.Count());
         }
     }
 }
