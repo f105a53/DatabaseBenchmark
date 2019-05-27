@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using DatabaseBenchmark.Model.EFCore;
 using DatabaseBenchmark.Model.Linq2Db;
+using LinqToDB.Data;
+using LinqToDB.DataProvider.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Employee = DatabaseBenchmark.Model.EFCore.Employee;
 
@@ -18,8 +20,14 @@ namespace DatabaseBenchmark
     {
         private readonly CompanyContext EfCoreContext = new CompanyContext();
 
-        private readonly CompanyDB Linq2DbContext =
-            new CompanyDB("Server=localhost;Database=Company;Trusted_Connection=True;");
+        private readonly CompanyDB Linq2DbContext;
+
+        public SelectJoinBenchmark()
+        {
+            DataConnection.AddConfiguration("Default", "Server=localhost;Database=Company;Trusted_Connection=True;",
+                new SqlServerDataProvider("Default", SqlServerVersion.v2017));
+            Linq2DbContext = new CompanyDB("Default");
+        }
 
         [Benchmark]
         public async Task<List<Employee>> EFCore()
@@ -30,8 +38,7 @@ namespace DatabaseBenchmark
         [Benchmark]
         public async Task<List<Model.Linq2Db.Employee>> Linq2Db()
         {
-            return await Linq2DbContext.Employees.Include(e => e.Worksons).ThenInclude(w => w.WorksonProject)
-                .ToListAsync();
+            return await Linq2DbContext.Employees.ToListAsync();
         }
     }
 }
