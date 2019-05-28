@@ -6,7 +6,7 @@ namespace DatabaseBenchmark
     {
         static void Main(string[] args)
         {
-            BenchmarkDotNet.Running.BenchmarkRunner.Run<SelectJoinBenchmark>();
+            BenchmarkDotNet.Running.BenchmarkRunner.Run<Bench>();
         }
     }
 }
