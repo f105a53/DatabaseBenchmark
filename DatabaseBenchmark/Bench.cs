@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using DatabaseBenchmark.Model.EFCore;
@@ -16,15 +14,17 @@ namespace DatabaseBenchmark
     [MarkdownExporter]
     [RPlotExporter]
     [MemoryDiagnoser]
-    [ReturnValueValidator(true)]
+    [AsciiDocExporter]
+    [ReturnValueValidator]
+    [ExecutionValidator]
     public class Bench
     {
-     
         public enum Workload
         {
             SelectEmployees,
             SelectEmployeeCount,
-            UpdateEmployee
+            UpdateEmployee,
+            CreateDelete
         }
 
         private readonly CompanyContext EfCoreContext = new CompanyContext();
@@ -86,7 +86,7 @@ namespace DatabaseBenchmark
         [Benchmark]
         public string SQL()
         {
-            int CountRows( )
+            int CountRows()
             {
                 using var command = new SqlCommand("SELECT * FROM [Company].[dbo].[Employee]", sqlConnection);
                 using var reader = command.ExecuteReader();
@@ -103,7 +103,8 @@ namespace DatabaseBenchmark
                 Workload.SelectEmployeeCount =>
                 ((int) new SqlCommand("SELECT COUNT(SSN) FROM Employee", sqlConnection).ExecuteScalar()).ToString(),
                 Workload.UpdateEmployee => new SqlCommand(
-                        $"UPDATE Employee SET Address='{DateTimeOffset.Now.ToString()}' WHERE SSN='123456789'", sqlConnection)
+                        $"UPDATE Employee SET Address='{DateTimeOffset.Now.ToString()}' WHERE SSN='123456789'",
+                        sqlConnection)
                     .ExecuteNonQuery().ToString(),
                 };
         }
