@@ -7,6 +7,7 @@ using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SqlServer;
 using Microsoft.Data.SqlClient;
+using Employee = DatabaseBenchmark.Model.EFCore.Employee;
 
 namespace DatabaseBenchmark
 {
@@ -56,11 +57,25 @@ namespace DatabaseBenchmark
                 return 1;
             }
 
+            int CreateDelete()
+            {
+                var e = new Employee
+                {
+                    Ssn = 1
+                };
+                var add = EfCoreContext.Add(e);
+                EfCoreContext.SaveChanges();
+                EfCoreContext.Remove(add);
+                EfCoreContext.SaveChanges();
+                return EfCoreContext.Employee.Count(em => em.Ssn == 1);
+            }
+
             return W switch
                 {
                 Workload.SelectEmployees => EfCoreContext.Employee.ToList().Count.ToString(),
                 Workload.SelectEmployeeCount => EfCoreContext.Employee.Count().ToString(),
                 Workload.UpdateEmployee => UpdateEmployee().ToString(),
+                Workload.CreateDelete => CreateDelete().ToString()
                 };
         }
 
@@ -75,11 +90,23 @@ namespace DatabaseBenchmark
                 return 1;
             }
 
+            int CreateDelete()
+            {
+                var e = new Model.Linq2Db.Employee
+                {
+                    SSN = 1
+                };
+                Linq2DbContext.Insert(e).MustBeOne();
+                Linq2DbContext.Delete(e).MustBeOne();
+                return Linq2DbContext.Employees.Count(em => em.SSN == 1);
+            }
+
             return W switch
                 {
                 Workload.SelectEmployees => Linq2DbContext.Employees.ToList().Count.ToString(),
                 Workload.SelectEmployeeCount => Linq2DbContext.Employees.Count().ToString(),
                 Workload.UpdateEmployee => UpdateEmployee().ToString(),
+                Workload.CreateDelete => CreateDelete().ToString()
                 };
         }
 
@@ -96,6 +123,13 @@ namespace DatabaseBenchmark
                 return i;
             }
 
+            int CreateDelete()
+            {
+                new SqlCommand("INSERT INTO Employee(SSN) VALUES(1)").ExecuteNonQuery().MustBeOne();
+                new SqlCommand("DELETE FROM Employee WHERE SSN=1").ExecuteNonQuery().MustBeOne();
+                return new SqlCommand("SELECT COUNT(SSN) FROM Employee WHERE SSN=1").ExecuteNonQuery();
+            }
+
             return W switch
                 {
                 Workload.SelectEmployees => CountRows()
@@ -106,6 +140,7 @@ namespace DatabaseBenchmark
                         $"UPDATE Employee SET Address='{DateTimeOffset.Now.ToString()}' WHERE SSN='123456789'",
                         sqlConnection)
                     .ExecuteNonQuery().ToString(),
+                Workload.CreateDelete => CreateDelete().ToString()
                 };
         }
     }
