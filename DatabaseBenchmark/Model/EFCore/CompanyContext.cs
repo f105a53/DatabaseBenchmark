@@ -27,6 +27,7 @@ namespace DatabaseBenchmark.Model.EFCore
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer("Server=localhost;Database=Company;Trusted_Connection=True;");
+                optionsBuilder.EnableSensitiveDataLogging(true);
             }
         }
 

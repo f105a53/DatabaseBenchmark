@@ -7,6 +7,7 @@ using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SqlServer;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Employee = DatabaseBenchmark.Model.EFCore.Employee;
 
 namespace DatabaseBenchmark
@@ -59,15 +60,17 @@ namespace DatabaseBenchmark
 
             int CreateDelete()
             {
+                var id = 11;
                 var e = new Employee
                 {
-                    Ssn = 1
+                    Ssn = id
                 };
-                var add = EfCoreContext.Add(e);
+                var entry = EfCoreContext.Entry(e);
+                entry.State = EntityState.Added;
                 EfCoreContext.SaveChanges();
-                EfCoreContext.Remove(add);
+                entry.State = EntityState.Deleted;
                 EfCoreContext.SaveChanges();
-                return EfCoreContext.Employee.Count(em => em.Ssn == 1);
+                return EfCoreContext.Employee.Count(em => em.Ssn == id);
             }
 
             return W switch
@@ -92,13 +95,14 @@ namespace DatabaseBenchmark
 
             int CreateDelete()
             {
+                var id = 13;
                 var e = new Model.Linq2Db.Employee
                 {
-                    SSN = 1
+                    SSN = id
                 };
                 Linq2DbContext.Insert(e).MustBeOne();
                 Linq2DbContext.Delete(e).MustBeOne();
-                return Linq2DbContext.Employees.Count(em => em.SSN == 1);
+                return Linq2DbContext.Employees.Count(em => em.SSN == id);
             }
 
             return W switch
@@ -125,9 +129,13 @@ namespace DatabaseBenchmark
 
             int CreateDelete()
             {
-                new SqlCommand("INSERT INTO Employee(SSN) VALUES(1)").ExecuteNonQuery().MustBeOne();
-                new SqlCommand("DELETE FROM Employee WHERE SSN=1").ExecuteNonQuery().MustBeOne();
-                return new SqlCommand("SELECT COUNT(SSN) FROM Employee WHERE SSN=1").ExecuteNonQuery();
+                var id = 14;
+                using var add = new SqlCommand($"INSERT INTO Employee(SSN) VALUES({id})", sqlConnection);
+                    add.ExecuteNonQuery().MustBeOne();
+                    using var del = new SqlCommand($"DELETE FROM Employee WHERE SSN={id}", sqlConnection);
+                    del.ExecuteNonQuery().MustBeOne();
+                    using var check = new SqlCommand($"SELECT COUNT(SSN) FROM Employee WHERE SSN={id}", sqlConnection);
+                return (int)check.ExecuteScalar();
             }
 
             return W switch
